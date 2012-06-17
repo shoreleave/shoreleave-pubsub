@@ -1,0 +1,55 @@
+shoreleave
+==========
+
+A smarter client-side in ClojureScript
+
+###Shoreleave is a collection of integrated libraries that focuses on:
+
+ * Security
+ * Idiomatic interfaces
+ * Common client-side strategies
+ * HTML5 capabilities
+ * ClojureScript's advantages
+
+It builds upon efforts found in other ClojureScript projects, such as [Fetch](https://github.com/ibdknox/fetch) and [ClojureScript:One](http://clojurescriptone.com/).
+
+
+Shoreleave-pubsub Overview
+---------------------------
+The `pubsubs` namespace defines two protocols: one for specificing buses and one for "publishables"
+
+An implementation is provide on the Google Closure pubsub system that allows for:
+
+ * Using a function as a topic (something you can subscribe to)
+ * Using an atom as a topic
+ * Using an embedded web worker as a topic
+ * Local storage as a topic
+ * Using keywords and strings as topics (standard Closure pubsub style)
+
+The pubsub system enables you to keep your system completely decoupled and frees you from having to liter state or DOM logic within functions.
+New functionality can be implemented by combining existing functions (treated like services).  Cross-cutting functionality (like logging) can be looped in anywhere.
+
+Instead, you declaratively bind pure-functions to side-effecting functions via subscriptions, or atoms to pure-functions.
+Entry-points into the pubsub system can be DOM listeners, like those found in [Enfocus](https://github.com/ckirkendall/enfocus) (and potential exits can be DOM actions).
+
+This gives you the heart of Reactive JavaScript (RxJS), without the additional verbs (both a benefit and a tradeoff).
+
+Plays well with others
+----------------------
+Shoreleave makes no assumptions about other libraries you might be using in your app.
+
+I have found it to pair particularly well with [Enfocus](https://github.com/ckirkendall/enfocus)
+
+
+Examples and usage
+------------------
+Please the github wiki for examples of each library feature
+
+
+License
+-------
+Copyright © 2012 Paul deGrandis
+
+Distributed under the Eclipse Public License, the same as Clojure.
+Please see the `LICENSE_epl.html` for details.
+
