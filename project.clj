@@ -8,7 +8,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [shoreleave/shoreleave-core "0.2.1"]
                  [shoreleabe/shoreleave-browser "0.2.1"]
-                 [shoreleabe/shoreleave-worker "0.2.1"]]
+                 [shoreleave/shoreleave-worker "0.2.1"]]
   :dev-dependencies [;[cdt "1.2.6.2-SNAPSHOT"]
                      ;[lein-cdt "1.0.0"] ; use lein cdt to attach
                      ;[lein-autodoc "0.9.0"]
