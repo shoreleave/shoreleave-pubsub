@@ -1,12 +1,10 @@
 (ns shoreleave.pubsubs.simple
+  "An extended pub/sub implementation built on Google's PubSub Object"
   (:require [goog.pubsub.PubSub :as pubsub]
             [shoreleave.pubsubs.protocols :as ps-protocols]))
 
-
-;; This is defined in ns barker.client.main, but ` resolves ns to user
-;(js/console.log (keyword `process-search)
-;(js/console.log (keyword (symbol "barker.client.main" (name 'process-search))))
-;all *ns* things are missing
+;; Below is an implementation of IMessageBrokerBus built upon
+;; Google Closure's [PubSub object](http://closure-library.googlecode.com/svn/docs/class_goog_pubsub_PubSub.html)
 
 (extend-type goog.pubsub.PubSub
   ps-protocols/IMessageBrokerBus
@@ -34,9 +32,14 @@
   IHash
   (-hash [bus] (goog.getUid bus)))
 
-(defn subscribers-count [bus topic]
+(defn subscribers-count
+  "Given a bus and a topic, return the number of subscribers
+  (registered handler functions)"
+  [bus topic]
   (.getCount bus (ps-protocols/topicify topic)))
 
-(defn bus []
+(defn bus
+  "Get a simple bus"
+  []
   (goog.pubsub.PubSub.))
 
