@@ -34,6 +34,8 @@ Entry-points into the pubsub system can be DOM listeners, like those found in [E
 
 This gives you the heart of Reactive JavaScript (RxJS), without the additional verbs (both a benefit and a tradeoff).
 
+Please see the Marginalia docs for [more information](http://shoreleave.github.com/shoreleave-pubsub/).
+
 Plays well with others
 ----------------------
 Shoreleave makes no assumptions about other libraries you might be using in your app.
