@@ -12,7 +12,7 @@
 
 ;; This is the internal Event used for publishing.  It ships data along with it
 (defn publish-event [topic data]
-  (let [e (goog.events.Events. topic)]
+  (let [e (goog.events.Event. topic)]
     (set! (.-data e) data)
     e))
 
