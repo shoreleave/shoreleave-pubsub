@@ -170,18 +170,18 @@
         (add-watch atom-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
         atom-as-topic)))
 
-  js/localStorage
-  (topicify [t]
-    (or (publishized? t)
-        (-> t hash str)))
-  (publishized? [t]
-    (-> t hash str))
-  (publishize [ls-as-topic bus]
-    (let [published-topic (topicify ls-as-topic)
-          bus-key (-> bus hash keyword)]
-      (do
-        (add-watch ls-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
-        ls-as-topic)))
+;  js/localStorage
+;  (topicify [t]
+;    (or (publishized? t)
+;        (-> t hash str)))
+;  (publishized? [t]
+;    (-> t hash str))
+;  (publishize [ls-as-topic bus]
+;    (let [published-topic (topicify ls-as-topic)
+;          bus-key (-> bus hash keyword)]
+;      (do
+;        (add-watch ls-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
+;        ls-as-topic)))
   
   default
   (topicify [t]

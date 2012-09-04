@@ -5,6 +5,7 @@
 
 ;; Below is an implementation of IMessageBrokerBus built upon
 ;; Google Closure's [PubSub object](http://closure-library.googlecode.com/svn/docs/class_goog_pubsub_PubSub.html)
+;; This will have all the properties of PubSub (ie: synchronous)
 
 (extend-type goog.pubsub.PubSub
   ps-protocols/IMessageBrokerBus
