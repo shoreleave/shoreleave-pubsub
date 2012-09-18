@@ -1,6 +1,6 @@
 (ns shoreleave.pubsubs.protocols
   (:require [shoreleave.efunction :as efn]
-            [shoreleave.worker :as swk]
+            ;[shoreleave.worker :as swk]
             [shoreleave.browser.storage.localstorage :as ls]))
 
 ;; Publish/Subscribe
@@ -144,19 +144,6 @@
                            ret))
                        new-meta))))
 
-  swk/WorkerFn
-  (topicify [t]
-    (or (publishized? t)
-        (-> t hash str)))
-  (publishized? [t]
-    (-> t hash str))
-  (publishize [worker-as-topic bus]
-    (let [published-topic (topicify worker-as-topic)
-          bus-key (-> bus hash keyword)]
-      (do
-        (add-watch worker-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
-        worker-as-topic)))
-
   Atom
   (topicify [t]
     (or (publishized? t)
@@ -170,6 +157,7 @@
         (add-watch atom-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
         atom-as-topic)))
 
+;; This is currently removed until a cross-browser (or goog-jar) approach is stablized
 ;  js/localStorage
 ;  (topicify [t]
 ;    (or (publishized? t)
@@ -187,3 +175,23 @@
   (topicify [t]
     (str t)))
 
+(defn include-workers
+  "Allow WebWorkers to participate in the PubSub system
+  NOTE: This means your browser supports BlobBuilder or Blob"
+  []
+  (do
+    (require '[shoreleave.worker :as swk])
+    (extend-protocol IPublishable
+      swk/WorkerFn
+      (topicify [t]
+        (or (publishized? t)
+            (-> t hash str)))
+      (publishized? [t]
+        (-> t hash str))
+      (publishize [worker-as-topic bus]
+        (let [published-topic (topicify worker-as-topic)
+              bus-key (-> bus hash keyword)]
+          (do
+            (add-watch worker-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
+            worker-as-topic))))
+    true))
