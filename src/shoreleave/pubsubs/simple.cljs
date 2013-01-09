@@ -15,7 +15,7 @@
   (subscribe-once [bus topic handler-fn]
     (.subscribeOnce bus (ps-protocols/topicify topic) handler-fn))
 
-  #_(subscribe-> [bus & chain-handler-fns]
+  (subscribe-> [bus & chain-handler-fns]
     (let [subscripts (partition 2 1 chain-handler-fns)]
       (when-not (empty? subscripts)
         (doseq [[t h] subscripts]
