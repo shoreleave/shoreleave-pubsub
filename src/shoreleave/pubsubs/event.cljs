@@ -32,6 +32,12 @@
       (swap! handlers assoc handler-fn wrapped-handler-fn)
       (event/listen-once bus (ps-protocols/topicify topic) wrapped-handler-fn)))
 
+  (subscribe-> [bus & chain-handler-fns]
+    (let [subscripts (partition 2 1 chain-handler-fns)]
+      (when-not (empty? subscripts)
+        (doseq [[t h] subscripts]
+          (ps-protocols/subscribe bus t h)))))
+
   (unsubscribe [bus topic handler-fn]
     (event/unlisten bus (ps-protocols/topicify topic) (@handlers handler-fn)))
 
