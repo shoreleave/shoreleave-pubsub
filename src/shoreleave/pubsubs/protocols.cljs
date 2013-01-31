@@ -1,7 +1,4 @@
-(ns shoreleave.pubsubs.protocols
-  (:require [shoreleave.efunction :as efn]
-            ;[shoreleave.worker :as swk]
-            [shoreleave.browser.storage.localstorage :as ls]))
+(ns shoreleave.pubsubs.protocols)
 
 ;; Publish/Subscribe
 ;; -----------------
@@ -29,11 +26,21 @@
 (defprotocol IMessageBrokerBus
   (subscribe [broker-bus topic handler-fn])
   (subscribe-once [broker-bus topic handler-fn])
-  (subscribe-> [broker-bus & chain-handler-fns])
+  ;(subscribe-> [broker-bus & chain-handler-fns])
+  ;; Protocols don't support variable args, back to the old impl
+  (subscribe-> [broker-bus handler-fn1 handler-fn2 handler-fn3]
+               [broker-bus handler-fn1 handler-fn2 handler-fn3 handler-fn4]
+               [broker-bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5])
   (unsubscribe [broker-bus topic handler-fn])
   (publish
     [broker-bus topic data]
     [broker-bus topic data more-data]))
+
+(defn chain-subscriptions [bus & handler-fns]
+  (let [subscripts (partition 2 1 handler-fns)]
+      (when-not (empty? subscripts)
+        (doseq [[t h] subscripts]
+          (subscribe bus t h)))))
 
 ;; In addition to strings and keywords, functions as topics, allowing for a
 ;; pipeline-like binding to take place.  For example:
@@ -66,24 +73,3 @@
   (publishized? [t])
   (publishize [t broker-bus]))
 
-;; TODO remove this - it was a bad idea
-(defn include-workers
-  "Allow WebWorkers to participate in the PubSub system
-  NOTE: This means your browser supports BlobBuilder or Blob"
-  []
-  (do
-    (require '[shoreleave.worker :as swk])
-    (extend-protocol IPublishable
-      swk/WorkerFn
-      (topicify [t]
-        (or (publishized? t)
-            (-> t hash str)))
-      (publishized? [t]
-        (-> t hash str))
-      (publishize [worker-as-topic bus]
-        (let [published-topic (topicify worker-as-topic)
-              bus-key (-> bus hash keyword)]
-          (do
-            (add-watch worker-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
-            worker-as-topic))))
-    true))
