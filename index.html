@@ -3028,14 +3028,14 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>shoreleave/shoreleave-pubsub -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">shoreleave/shoreleave-pubsub</h1><h2 class="project-version">0.2.2</h2><br /><p>A smarter client-side with ClojureScript : Shoreleave's publish/subscribe system</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-core</td><td class="dotted"><hr /></td><td class="dep-version">0.2.2</td></tr><tr><td class="dep-name">shoreleave/shoreleave-browser</td><td class="dotted"><hr /></td><td class="dep-version">0.2.2</td></tr><tr><td class="dep-name">shoreleave/shoreleave-worker</td><td class="dotted"><hr /></td><td class="dep-version">0.2.2</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#shoreleave.pubsubs.crossdoc">shoreleave.pubsubs.crossdoc</a></li><li><a href="#shoreleave.pubsubs.event">shoreleave.pubsubs.event</a></li><li><a href="#shoreleave.pubsubs.protocols">shoreleave.pubsubs.protocols</a></li><li><a href="#shoreleave.pubsubs.simple">shoreleave.pubsubs.simple</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#shoreleave.pubsubs.crossdoc" name="shoreleave.pubsubs.crossdoc"><h1 class="project-name">shoreleave.pubsubs.crossdoc</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</script><title>shoreleave/shoreleave-pubsub -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">shoreleave/shoreleave-pubsub</h1><h2 class="project-version">0.3.0</h2><br /><p>A smarter client-side with ClojureScript : Shoreleave's publish/subscribe system</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-core</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-browser</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#shoreleave.pubsubs.crossdoc">shoreleave.pubsubs.crossdoc</a></li><li><a href="#shoreleave.pubsubs.event">shoreleave.pubsubs.event</a></li><li><a href="#shoreleave.pubsubs.protocols">shoreleave.pubsubs.protocols</a></li><li><a href="#shoreleave.pubsubs.publishable">shoreleave.pubsubs.publishable</a></li><li><a href="#shoreleave.pubsubs.simple">shoreleave.pubsubs.simple</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#shoreleave.pubsubs.crossdoc" name="shoreleave.pubsubs.crossdoc"><h1 class="project-name">shoreleave.pubsubs.crossdoc</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns shoreleave.pubsubs.crossdoc
   (:require [clojure.browser.net :as net]
             [goog.net.xpc.CrossPageChannel :as xpc]
             [shoreleave.pubsubs.protocols :as ps-protocols]))</pre></td></tr><tr><td class="docs"><h1>LOOK AWAY</h1>
 
-<p>This bus is a work in progress and should not be used <em>AT ALL</em>. Please use the Simple or Event pubsub bus instead</p>
+<p>This is a work in progress and should not be used <em>AT ALL</em></p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def reg-once (atom #{}))</pre></td></tr><tr><td class="docs"><p>This is a pubsub system built upon HTML5 Messaging API
 It will allow for cross-document pubsub functionality</p>
@@ -3088,6 +3088,14 @@ We need a mapping of handler-fn -> #(handler-fn (.-data %))</p>
       (swap! handlers assoc handler-fn wrapped-handler-fn)
       (event/listen-once bus (ps-protocols/topicify topic) wrapped-handler-fn)))
 
+  (subscribe-&gt;
+    ([bus handler-fn1 handler-fn2 handler-fn3]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3))
+    ([bus handler-fn1 handler-fn2 handler-fn3 handler-fn4]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3 handler-fn4))
+    ([bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5)))
+
   (unsubscribe [bus topic handler-fn]
     (event/unlisten bus (ps-protocols/topicify topic) (@handlers handler-fn)))
 
@@ -3106,10 +3114,7 @@ We need a mapping of handler-fn -> #(handler-fn (.-data %))</p>
 </td><td class="codes"><pre class="brush: clojure">(defn bus
   []
   (goog.events.EventTarget.))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#shoreleave.pubsubs.protocols" name="shoreleave.pubsubs.protocols"><h1 class="project-name">shoreleave.pubsubs.protocols</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns shoreleave.pubsubs.protocols
-  (:require [shoreleave.efunction :as efn]
-            [shoreleave.worker :as swk]
-            [shoreleave.browser.storage.localstorage :as ls]))</pre></td></tr><tr><td class="docs"><h2>Publish/Subscribe</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns shoreleave.pubsubs.protocols)</pre></td></tr><tr><td class="docs"><h2>Publish/Subscribe</h2>
 
 <p>Shoreleave allows you to compose your programs by
 declaratively binding functions, atoms, workers, and and localStorage
@@ -3129,23 +3134,27 @@ local buses, cross-document buses, buses that are a proxy for other servers...</
 <ul>
 <li>subscribe - for a given bus, bind the handler-fn to the topic.</li>
 <li>subscribe-once - for a given bus, create a one-time binding between the topic and the handler-fn</li>
+<li>subscribe-> - for a given bus, create a chain of subscriptions, similar to how the threading macro works</li>
 <li>unsubscribe - for a given bus, unbind the handler-fn and the topic</li>
 <li>publish - for a given bus, publish data to all the handler-fn's bound to the topic</li>
 </ul>
 </td><td class="codes"><pre class="brush: clojure">(defprotocol IMessageBrokerBus
   (subscribe [broker-bus topic handler-fn])
   (subscribe-once [broker-bus topic handler-fn])
-  #_(subscribe-&gt; [broker-bus hf1 hf2]
-               [broker-bus hf1 hf2 hf3]
-               [broker-bus hf1 hf2 hf3 hf4]
-               [broker-bus hf1 hf2 hf3 hf4 hf5]
-               [broker-bus hf1 hf2 hf3 hf4 hf5 hf6]
-               [broker-bus hf1 hf2 hf3 hf4 hf5 hf6 hf7]
-               [broker-bus hf1 hf2 hf3 hf4 hf5 hf6 hf7 hf8])
+  ;(subscribe-&gt; [broker-bus &amp; chain-handler-fns])
+  ;; Protocols don't support variable args, back to the old impl
+  (subscribe-&gt; [broker-bus handler-fn1 handler-fn2 handler-fn3]
+               [broker-bus handler-fn1 handler-fn2 handler-fn3 handler-fn4]
+               [broker-bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5])
   (unsubscribe [broker-bus topic handler-fn])
   (publish
     [broker-bus topic data]
-    [broker-bus topic data more-data]))</pre></td></tr><tr><td class="docs"><p>In addition to strings and keywords, functions as topics, allowing for a
+    [broker-bus topic data more-data]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn chain-subscriptions [bus &amp; handler-fns]
+  (let [subscripts (partition 2 1 handler-fns)]
+      (when-not (empty? subscripts)
+        (doseq [[t h] subscripts]
+          (subscribe bus t h)))))</pre></td></tr><tr><td class="docs"><p>In addition to strings and keywords, functions as topics, allowing for a
 pipeline-like binding to take place.  For example:</p>
 
 <p><code>(subscribe my-bus user-search render-search-results)</code></p>
@@ -3165,8 +3174,8 @@ through the pubsub system.</p>
 <p>The second protocol is used to define things that can be published,
 <em>ie:</em> things that be used as a topic.</p>
 
-<p>Publishables are usually constructed as a decorator (using Shoreleave's
-Function type), or as an adapter to IWatchable interfaces</p>
+<p>Publishables are usually constructed as a decorator (which result in a
+Function object containing metadata), or as an adapter to IWatchable interfaces.</p>
 
 <p>A Publishable knows how to make a string-based topic of itself (<code>topicify</code>),
 can tell if it has already been decorated (<code>publishized?</code>), and can generate
@@ -3174,19 +3183,29 @@ the decorator form that is bound to a bus (<code>publishize</code>)</p>
 </td><td class="codes"><pre class="brush: clojure">(defprotocol IPublishable
   (topicify [t])
   (publishized? [t])
-  (publishize [t broker-bus]))</pre></td></tr><tr><td class="docs"><h2>Publishables</h2>
+  (publishize [t broker-bus]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#shoreleave.pubsubs.publishable" name="shoreleave.pubsubs.publishable"><h1 class="project-name">shoreleave.pubsubs.publishable</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns shoreleave.pubsubs.publishable
+  (:require [shoreleave.pubsubs.protocols :as ps-protocols]))</pre></td></tr><tr><td class="docs"><h2>Publishables</h2>
 
 <p>Shoreleave comes with out-of-the-box support for the most common
 publishables</p>
 
 <h3>Functions and Function types</h3>
 
-<p>Functions need to be decorated (much like how <code>memoize</code> works).</p>
+<p>Functions need to be decorated (much like how <code>memoize</code> works).
+This is now supported by CLJS core - ported from Shoreleave.</p>
 
 <p>For example:</p>
 
-<pre><code> (defn some-fn [] 5)
+<pre><code> (def a-bus (simple-bus/bus))
+ (defn some-fn [] 5)
  (def some-fn-p (publishize some-fn))
+
+ (defn another-fn [x] (inc x))
+ (def another-fn-p (publishize another-fn))
+
+ (subscribe a-bus another-fn-p some-fn-p) ;; some-fn-p will automatically publish its result to another-fn-p
+ ;; Note that the subscribing function (or entity) doesn't need to be `publishize`
 
  (some-fn) ;; This DOES NOT get sent to the bus
  (some-fn-p) ;; The results of this call are published on the bus
@@ -3201,9 +3220,9 @@ function is called, as shown above.</p>
 
 <p>All subscribed functions will be passed a map: <code>{:old some-val :new another-val}</code></p>
 
-<h3>LocalStorage</h3>
+<h3>Browser storages (localStorage and sessionStorage)</h3>
 
-<p>localStorage behaves exactly like an atom, as described above</p>
+<p>All storage systems behave exactly like an atom, as described above</p>
 
 <h3>WorkerFn</h3>
 
@@ -3213,87 +3232,90 @@ function is called, as shown above.</p>
 
 <p>You can also use strings and keywords as topics (the most useful case for
 cross-cutting functionality).</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(extend-protocol IPublishable
+</td><td class="codes"><pre class="brush: clojure">(extend-protocol ps-protocols/IPublishable
 
   function
   (topicify [t]
-    (or (publishized? t)
+    (or (ps-protocols/publishized? t)
         (-&gt; t hash str)))
   (publishized? [t]
     (:sl-published (meta t)))
   (publishize [fn-as-topic bus]
     (if (-&gt; (meta fn-as-topic) :sl-buses (get (-&gt; bus hash keyword)))
       fn-as-topic
-      (let [published-topic (topicify fn-as-topic)
+      (let [published-topic (ps-protocols/topicify fn-as-topic)
             new-meta (assoc (meta fn-as-topic) :sl-published published-topic
                                                :sl-buses (-&gt; (get (meta fn-as-topic) :sl-buses #{}) (conj (-&gt; bus hash keyword))))]
-        (efn/Function. (fn [&amp; args]
-                         (let [ret (apply fn-as-topic args)]
-                           (publish bus published-topic ret)
-                           ret))
-                       new-meta))))
-
-  efn/Function
-  (topicify [t]
-    (or (publishized? t)
-        (topicify (.-f t))))
-  (publishized? [t]
-    (:sl-published (meta t)))
-  (publishize [fn-as-topic bus]
-    (if (-&gt; (meta fn-as-topic) :sl-buses (get (-&gt; bus hash keyword)))
-      fn-as-topic
-      (let [published-topic (topicify fn-as-topic)
-            new-meta (assoc (meta fn-as-topic) :sl-published published-topic
-                                               :sl-buses (-&gt; (get (meta fn-as-topic) :sl-buses #{}) (conj (-&gt; bus hash keyword))))]
-        (efn/Function. (fn [&amp; args]
-                         (let [ret (apply (.-f fn-as-topic) args)]
-                           (publish bus published-topic ret)
-                           ret))
-                       new-meta))))
-
-  swk/WorkerFn
-  (topicify [t]
-    (or (publishized? t)
-        (-&gt; t hash str)))
-  (publishized? [t]
-    (-&gt; t hash str))
-  (publishize [worker-as-topic bus]
-    (let [published-topic (topicify worker-as-topic)
-          bus-key (-&gt; bus hash keyword)]
-      (do
-        (add-watch worker-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
-        worker-as-topic)))
+        (with-meta (fn [&amp; args] (let [ret (apply fn-as-topic args)]
+                       (ps-protocols/publish bus published-topic ret)
+                       ret))
+                   new-meta))))
 
   Atom
   (topicify [t]
-    (or (publishized? t)
+    (or (ps-protocols/publishized? t)
         (-&gt; t hash str)))
   (publishized? [t]
     (-&gt; t hash str))
   (publishize [atom-as-topic bus]
-    (let [published-topic (topicify atom-as-topic)
+    (let [published-topic (ps-protocols/topicify atom-as-topic)
           bus-key (-&gt; bus hash keyword)]
       (do
-        (add-watch atom-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
+        (add-watch atom-as-topic bus-key #(ps-protocols/publish bus published-topic {:old %3 :new %4}))
         atom-as-topic)))
 
-;  js/localStorage
-;  (topicify [t]
-;    (or (publishized? t)
-;        (-&gt; t hash str)))
-;  (publishized? [t]
-;    (-&gt; t hash str))
-;  (publishize [ls-as-topic bus]
-;    (let [published-topic (topicify ls-as-topic)
-;          bus-key (-&gt; bus hash keyword)]
-;      (do
-;        (add-watch ls-as-topic bus-key #(publish bus published-topic {:old %3 :new %4}))
-;        ls-as-topic)))
+  ;; this could be a Fn that we attached metadata to - for some reason it gets hit like an obj, instead of a fn 
+  object
+  (topicify [t]
+    (or (ps-protocols/publishized? t)
+        (-&gt; t hash str)))
+  (publishized? [t]
+    (:sl-published (meta t)))
   
+  string
+  (topicify [t] t)
+
   default
   (topicify [t]
-    (str t)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#shoreleave.pubsubs.simple" name="shoreleave.pubsubs.simple"><h1 class="project-name">shoreleave.pubsubs.simple</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>An extended pub/sub implementation built on Google's PubSub Object</p>
+    (name t)))</pre></td></tr><tr><td class="docs"><h2>Local Storage</h2>
+
+<p>It is expected that before calling this, you've handled your depenencies, ala
+ <code>(:require [goog.storage.mechanism.HTML5LocalStorage :as gls])</code></p>
+</td><td class="codes"><pre class="brush: clojure">(defn include-localstorage! []
+  (extend-type goog.storage.mechanism.HTML5LocalStorage
+    ps-protocols/IPublishable
+    (topicify [t]
+      (or (ps-protocols/publishized? t)
+          (-&gt; t hash str)))
+    (publishized? [t]
+      (-&gt; t hash str))
+    (publishize [ls-as-topic bus]
+      (let [published-topic (ps-protocols/topicify ls-as-topic)
+            bus-key (-&gt; bus hash keyword)]
+        (do
+          (add-watch ls-as-topic bus-key #(ps-protocols/publish bus published-topic {:old %3 :new %4}))
+          ls-as-topic)))))</pre></td></tr><tr><td class="docs"><h2>Session Storage</h2>
+
+<p>It is expected that before calling this, you've handled your depenencies, ala
+ <code>(:require [goog.storage.mechanism.HTML5SessionStorage :as glss])</code></p>
+</td><td class="codes"><pre class="brush: clojure">(defn include-sessionstorage! []
+  (extend-type goog.storage.mechanism.HTML5SessionStorage
+    ps-protocols/IPublishable
+    (topicify [t]
+      (or (ps-protocols/publishized? t)
+          (-&gt; t hash str)))
+    (publishized? [t]
+      (-&gt; t hash str))
+    (publishize [ss-as-topic bus]
+      (let [published-topic (ps-protocols/topicify ss-as-topic)
+            bus-key (-&gt; bus hash keyword)]
+        (do
+          (add-watch ss-as-topic bus-key #(ps-protocols/publish bus published-topic {:old %3 :new %4}))
+          ss-as-topic)))))</pre></td></tr><tr><td class="docs"><p>This is left in the code for historical reasons,
+You can use it as an example on how to build custom
+function decorators in ClojureScript, correctly use the Blob system,
+generate new Object URLs, and how WebWorkers execute.</p>
+</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#shoreleave.pubsubs.simple" name="shoreleave.pubsubs.simple"><h1 class="project-name">shoreleave.pubsubs.simple</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>An extended pub/sub implementation built on Google's PubSub Object</p>
 </td><td class="codes"><pre class="brush: clojure">(ns shoreleave.pubsubs.simple
   (:require [goog.pubsub.PubSub :as pubsub]
             [shoreleave.pubsubs.protocols :as ps-protocols]))</pre></td></tr><tr><td class="docs"><p>Below is an implementation of IMessageBrokerBus built upon
@@ -3308,11 +3330,13 @@ This will have all the properties of PubSub (ie: synchronous)</p>
   (subscribe-once [bus topic handler-fn]
     (.subscribeOnce bus (ps-protocols/topicify topic) handler-fn))
 
-  #_(subscribe-&gt; [bus &amp; chain-handler-fns]
-    (let [subscripts (partition 2 1 chain-handler-fns)]
-      (when-not (empty? subscripts)
-        (doseq [[t h] subscripts]
-          (ps-protocols/subscribe bus t h)))))
+  (subscribe-&gt;
+    ([bus handler-fn1 handler-fn2 handler-fn3]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3))
+    ([bus handler-fn1 handler-fn2 handler-fn3 handler-fn4]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3 handler-fn4))
+    ([bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5)))
 
   (unsubscribe [bus topic handler-fn]
     (.unsubscribe bus (ps-protocols/topicify topic) handler-fn))
