@@ -32,6 +32,14 @@
       (swap! handlers assoc handler-fn wrapped-handler-fn)
       (event/listen-once bus (ps-protocols/topicify topic) wrapped-handler-fn)))
 
+  (subscribe->
+    ([bus handler-fn1 handler-fn2 handler-fn3]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3))
+    ([bus handler-fn1 handler-fn2 handler-fn3 handler-fn4]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3 handler-fn4))
+    ([bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5]
+     (ps-protocols/chain-subscriptions bus handler-fn1 handler-fn2 handler-fn3 handler-fn4 handler-fn5)))
+
   (unsubscribe [bus topic handler-fn]
     (event/unlisten bus (ps-protocols/topicify topic) (@handlers handler-fn)))
 
